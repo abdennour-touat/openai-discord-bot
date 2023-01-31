@@ -4,7 +4,6 @@ import os
 
 from app.chatGPT_ai.openai import chatgpt_response, chatgpt_image_response
 
-
 load_dotenv()
 discord_token = os.getenv("DISCORD-TOKEN")
 
@@ -27,16 +26,18 @@ class Client(discord.Client):
             user_message = message.content.replace("/ai-img", "")
             print(command, user_message)
 
-        if command == "/ai":
-            bot_response = chatgpt_response(prompt=user_message)
-            await message.channel.send(f"Answer: {bot_response}")
-        elif command == "/ai-img":
-            bot_response = chatgpt_image_response(prompt=user_message)
-            await message.channel.send(bot_response)
+        match command:
+            case "/ai":
+                bot_response = chatgpt_response(prompt=user_message)
+                await message.channel.send(f"Answer: {bot_response}")
+            case "/ai-img":
+                bot_response = chatgpt_image_response(prompt=user_message)
+                await message.channel.send(bot_response)
+            case _:
+                print('that aint my bot\'s command')
 
 
 intents = discord.Intents.default()
 intents.message_content = True
-
 
 client = Client(intents=intents)
